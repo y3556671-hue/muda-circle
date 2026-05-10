@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { MessageSquareMore } from "lucide-react";
-import { authOptions } from "@/lib/auth";
 import { getCategories } from "@/lib/services/category-service";
 import { listPosts } from "@/lib/services/post-service";
 import { BRAND } from "@/lib/constants/theme";
-import { getServerSession } from "next-auth";
 import { SiteHeader } from "@/components/layout/site-header";
 
 const sortLabels = {
@@ -19,8 +17,7 @@ export default async function Home({
 }) {
   const selectedCategory = searchParams?.category;
   const sort = searchParams?.sort === "hot" ? "hot" : "latest";
-  const [session, categories, posts] = await Promise.all([
-    getServerSession(authOptions),
+  const [categories, posts] = await Promise.all([
     getCategories(),
     listPosts({ categorySlug: selectedCategory, sort }),
   ]);

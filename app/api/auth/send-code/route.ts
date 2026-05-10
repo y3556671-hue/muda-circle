@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { createEmailVerificationCode } from "@/lib/services/auth-service";
-import { RESEND_FROM, resend } from "@/lib/resend";
+import { RESEND_FROM, resend as getResend } from "@/lib/resend";
 import { generateVerificationCode } from "@/lib/utils";
 import { sendCodeSchema } from "@/lib/validators/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
@@ -12,6 +14,8 @@ export async function POST(request: Request) {
     if (!parsed.success) {
       return NextResponse.json({ message: parsed.error.issues[0]?.message ?? "邮箱格式错误" }, { status: 400 });
     }
+
+    const resend = getResend();
 
     if (!resend) {
       return NextResponse.json({ message: "邮件服务尚未配置，请补充 RESEND_API_KEY" }, { status: 500 });

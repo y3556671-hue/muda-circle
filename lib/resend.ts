@@ -1,7 +1,15 @@
 import { Resend } from "resend";
 
-const apiKey = process.env.RESEND_API_KEY;
+let _resend: Resend | null | undefined;
 
-export const resend = apiKey ? new Resend(apiKey) : null;
+function getResend(): Resend | null {
+  if (_resend === undefined) {
+    const apiKey = process.env.RESEND_API_KEY;
+    _resend = apiKey ? new Resend(apiKey) : null;
+  }
 
-export const RESEND_FROM = process.env.RESEND_FROM ?? "noreply@melbcircle.com";
+  return _resend;
+}
+
+export const RESEND_FROM = "noreply@melbcircle.com";
+export { getResend as resend };

@@ -3,6 +3,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
+import { getEnv } from "@/lib/env";
 import { verifyCodeSchema } from "@/lib/validators/auth";
 import { verifyLoginCode } from "@/lib/services/auth-service";
 
@@ -55,7 +56,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: getEnv("NEXTAUTH_SECRET"),
 };
 
 const authHandler = NextAuth(authOptions);

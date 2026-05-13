@@ -1,5 +1,4 @@
 import type { NextAuthOptions } from "next-auth";
-import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
@@ -58,10 +57,6 @@ export const authOptions: NextAuthOptions = {
   },
   secret: getEnv("NEXTAUTH_SECRET"),
 };
-
-const authHandler = NextAuth(authOptions);
-
-export { authHandler as GET, authHandler as POST };
 
 export async function getCurrentUser(userId: string) {
   return prisma.user.findUnique({

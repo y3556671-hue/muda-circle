@@ -19,9 +19,7 @@ export function LikeButton({
   const [loading, setLoading] = useState(false);
 
   async function handleToggle() {
-    if (disabled || loading) {
-      return;
-    }
+    if (disabled || loading) return;
 
     setLoading(true);
 
@@ -40,12 +38,18 @@ export function LikeButton({
       type="button"
       disabled={disabled || loading}
       onClick={handleToggle}
-      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition ${
-        likedByViewer ? "bg-rose-50 text-rose-600" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-      } disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400`}
+      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all active:scale-95 ${
+        likedByViewer
+          ? "bg-rose-50 text-rose-600 ring-1 ring-rose-200/60 hover:bg-rose-100"
+          : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700"
+      } disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400 disabled:ring-0`}
     >
-      <Heart className={`h-4 w-4 ${likedByViewer ? "fill-current" : ""}`} />
-      {loading ? "处理中..." : `点赞 ${likeCount}`}
+      <Heart
+        className={`h-4 w-4 transition-all ${
+          likedByViewer ? "fill-rose-500 stroke-rose-500 scale-110" : ""
+        } ${!disabled && !likedByViewer ? "group-hover:scale-105" : ""}`}
+      />
+      {loading ? "..." : `点赞 ${likeCount}`}
     </button>
   );
 }

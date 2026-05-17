@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Send, Loader2, AlertCircle, Tag, Type, FileText } from "lucide-react";
 
 type CategoryOption = {
   id: string;
@@ -30,9 +31,7 @@ export function CreatePostForm({ categories }: { categories: CategoryOption[] })
       });
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
+      if (!response.ok) throw new Error(data.message);
 
       router.push(`/post/${data.id}`);
       router.refresh();
@@ -44,59 +43,89 @@ export function CreatePostForm({ categories }: { categories: CategoryOption[] })
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 rounded-[32px] border border-slate-200 bg-white p-6 card-shadow">
-      {error ? <div className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</div> : null}
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {error ? (
+        <div className="flex items-start gap-2.5 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+          {error}
+        </div>
+      ) : null}
 
-      <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700">选择版块</label>
-        <select
-          value={categorySlug}
-          onChange={(event) => setCategorySlug(event.target.value)}
-          className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#002147]"
-          required
-        >
-          <option value="">请选择版块</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.slug}>
-              {category.name}
-            </option>
-          ))}
-        </select>
+      <div className="card-elevation !rounded-[28px] overflow-hidden">
+        {/* Category */}
+        <div className="border-b border-slate-50 px-6 py-5 sm:px-8">
+          <label className="mb-2.5 flex items-center gap-2 text-sm font-medium text-slate-700">
+            <Tag className="h-4 w-4 text-slate-400" />
+            选择版块
+          </label>
+          <select
+            value={categorySlug}
+            onChange={(event) => setCategorySlug(event.target.value)}
+            className="input-ring w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700"
+            required
+          >
+            <option value="">请选择版块</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.slug}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Title */}
+        <div className="border-b border-slate-50 px-6 py-5 sm:px-8">
+          <label className="mb-2.5 flex items-center gap-2 text-sm font-medium text-slate-700">
+            <Type className="h-4 w-4 text-slate-400" />
+            标题
+          </label>
+          <input
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            type="text"
+            placeholder="例如：COMP90054 期中复习资料求推荐"
+            className="input-ring w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm placeholder:text-slate-400"
+            required
+          />
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-5 sm:px-8">
+          <label className="mb-2.5 flex items-center gap-2 text-sm font-medium text-slate-700">
+            <FileText className="h-4 w-4 text-slate-400" />
+            正文
+          </label>
+          <textarea
+            value={body}
+            onChange={(event) => setBody(event.target.value)}
+            rows={12}
+            placeholder="写下你想分享或求助的内容..."
+            className="input-ring w-full resize-none rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-7 placeholder:text-slate-400"
+            required
+          />
+        </div>
       </div>
 
-      <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700">标题</label>
-        <input
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          type="text"
-          placeholder="例如：COMP90054 期中复习资料求推荐"
-          className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#002147]"
-          required
-        />
-      </div>
-
-      <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700">正文</label>
-        <textarea
-          value={body}
-          onChange={(event) => setBody(event.target.value)}
-          rows={10}
-          placeholder="写下你想分享或求助的内容..."
-          className="w-full rounded-3xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#002147]"
-          required
-        />
-      </div>
-
-      <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-500">
-        发帖提示：请尽量使用清晰标题，交易和租房信息建议注明时间、地点和联系方式。
+      <div className="flex items-start gap-2.5 rounded-2xl bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-700">
+        <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+        <span>发帖提示：请使用清晰标题，交易和租房信息建议注明时间、地点和联系方式。</span>
       </div>
 
       <button
         disabled={loading}
-        className="w-full rounded-2xl bg-[#002147] px-4 py-3 font-semibold text-white transition hover:opacity-95 disabled:cursor-not-allowed disabled:bg-slate-300"
+        className="btn-primary w-full !py-3.5 inline-flex items-center justify-center gap-2"
       >
-        {loading ? "发布中..." : "发布帖子"}
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            发布中...
+          </>
+        ) : (
+          <>
+            <Send className="h-4 w-4" />
+            发布帖子
+          </>
+        )}
       </button>
     </form>
   );

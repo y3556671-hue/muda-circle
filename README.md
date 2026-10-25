@@ -24,8 +24,8 @@
 项目使用 `.env.local`，当前已写入以下变量：
 
 ```env
-DATABASE_URL=postgresql://postgres.pbewtmpztsedjlwjsdop:nezdut-kupfi0-Rizmib@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres
-RESEND_API_KEY=re_ZhPKxCkw_NenUnjdDGkgHf7PMuNMp89Rf
+DATABASE_URL=<YOUR_SUPABASE_DATABASE_URL>
+RESEND_API_KEY=<YOUR_RESEND_API_KEY>
 NEXTAUTH_SECRET=你的随机 32 位字符串
 NEXTAUTH_URL=http://localhost:3000
 RESEND_FROM=墨大圈子 <onboarding@resend.dev>
